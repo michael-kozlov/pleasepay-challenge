@@ -1,5 +1,5 @@
 import React from 'react';
-import {observable, computed} from 'mobx';
+import {observable, computed, action} from 'mobx';
 import {inject, observer} from "mobx-react";
 
 const NUMERIC_STRING = /^\d*$/;
@@ -48,6 +48,14 @@ class BankAccountEditForm extends React.Component {
     return `${this.sortCode1}-${this.sortCode2}-${this.sortCode3}`;
   }
 
+  @observable
+  errorMessage;
+
+  @action
+  setErrorMessage(errorMessage) {
+    this.errorMessage = errorMessage;
+  }
+
   componentWillMount() {
     const store = this.props.store;
     const account = store.bankdetails.accounts.find(account => account._id === store.view.editAccountId);
@@ -70,7 +78,6 @@ class BankAccountEditForm extends React.Component {
     return text.match(NUMERIC_STRING);
   }
 
-  // Validation example
   handleAccountChange = (event) => {
     const account = event.target.value;
     if (this.isNumericString(account)) {
@@ -146,6 +153,50 @@ class BankAccountEditForm extends React.Component {
     this.swift = swift;
   }
 
+  isValid = () => {
+    let valid = true;
+    let wrongFields = [];
+
+    if (!this.currencyId) {
+      wrongFields.push('currency');
+      valid = false;
+    }
+
+    if (!this.name || this.name.length == 0) {
+      wrongFields.push('name');
+      valid = false;
+    }
+
+    if (!this.account || this.account.length == 0) {
+      wrongFields.push('name');
+      valid = false;
+    }
+
+    if (!this.iban || this.iban.length == 0) {
+      wrongFields.push('iban');
+      valid = false;
+    }
+
+    if (this.sortCode.length < 8) {
+      wrongFields.push('sort code');
+      valid = false;
+    }
+
+    if (!this.swift || this.swift.length < 8) {
+      wrongFields.push('swift');
+      valid = false;
+    }
+
+    if(!valid) {
+      console.log(34);
+      const errorMessage = 'Enter valid ' + wrongFields.join(', ') + ' before save';
+      this.setErrorMessage(errorMessage);
+      console.log(errorMessage);
+    }
+
+    return valid;
+  }
+
   cancel = () => {
     const store = this.props.store;
     store.view.setDisplay('bankdetails');
@@ -153,6 +204,10 @@ class BankAccountEditForm extends React.Component {
   }
 
   save = () => {
+    if (!this.isValid()) {
+      return;
+    }
+
     const store = this.props.store;
 
     // Build JS-object for sending to server as JSON
@@ -172,7 +227,6 @@ class BankAccountEditForm extends React.Component {
     }).catch((error) => {
         store.setError(error);
     });
-
   }
 
   render() {
@@ -228,6 +282,7 @@ class BankAccountEditForm extends React.Component {
                value={this.swift}
                ref={(element) => {this.swiftInput = element;}}
                onChange={this.handleSwiftChange}/>
+        <div className="editFormErrorMessage">{this.errorMessage}</div>
         <button type="button" onClick={this.cancel}>Cancel</button>
         <button type="button" onClick={this.save}>Save</button>
       </div>

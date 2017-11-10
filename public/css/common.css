@@ -100,7 +100,6 @@ label.swift {
 }
 
 div.accountEditForm > button {
-  margin-top: 12px;
   margin-left: 12px;
   float: right;
 }
@@ -112,4 +111,12 @@ button {
 
 button.cancel {
   left: 0;
+}
+
+div.editFormErrorMessage {
+  margin-top: 12px;
+  width: 100%;
+  float: left;
+  color: red;
+  font-weight: bold;
 }
