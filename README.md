@@ -4,7 +4,7 @@
 
 ```
 npm install
-npm npm run-script build
+npm run-script build
 npm start
 open http://localhost:8080
 ```
