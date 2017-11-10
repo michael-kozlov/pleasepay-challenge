@@ -17,22 +17,25 @@ class Bankdetails extends React.Component {
 
   render() {
     return (
-      <table className="bankdetails">
-        <thead>
-          <tr>
-            <th>Currency</th>
-            <th>Name</th>
-            <th>Account</th>
-            <th>IBAN</th>
-            <th>Sort code</th>
-            <th>SWIFT</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <BankAccounts/>
-        </tbody>
-      </table>
+      <div className="bankdetails">
+        <header>Bankdetails</header>
+        <table className="bankdetails">
+          <thead>
+            <tr>
+              <th>Currency</th>
+              <th>Name</th>
+              <th>Account</th>
+              <th>IBAN</th>
+              <th>Sort code</th>
+              <th>SWIFT</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <BankAccounts/>
+          </tbody>
+        </table>
+      </div>
     );
   }
 }

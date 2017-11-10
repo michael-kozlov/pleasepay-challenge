@@ -13,6 +13,25 @@ body {
 header {
   margin-bottom: 12px;
   font-size: 24px;
+  font-weight: bold;
+}
+
+div.errorDialog {
+  margin: 0px auto;
+  width: 480px;
+}
+
+div.authenticationDialog {
+  margin: 0px auto;
+  width: 480px;
+}
+
+div.authenticationDialog > input {
+  margin-top: 12px;
+  padding-left: 6px;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: #F3F3F3;
 }
 
 table.bankdetails {
@@ -27,10 +46,17 @@ table.bankdetails tr {
 }
 
 table.bankdetails th {
+  padding-left: 12px;
+  text-align: left;
   font-weight: bold;
 }
 
+table.bankdetails td {
+  padding-left: 12px;
+}
+
 div.accountEditForm {
+  margin: 0px auto;
   width: 480px;
 }
 
@@ -45,16 +71,23 @@ div.accountEditForm > select {
   display: block;
   box-sizing: border-box;
   margin-top: 12px;
+  border: 1px solid black;
+  border-radius: 5px;
   width: 360px;
   float: left;
+  background-color: #F3F3F3;
 }
 
 div.accountEditForm > input {
   display: block;
   box-sizing: border-box;
   margin-top: 12px;
+  border: 1px solid black;
+  border-radius: 5px;
   width: 360px;
+  padding-left: 6px;
   float: left;
+  background-color: #F3F3F3;
 }
 
 div.accountEditForm > input.sortCode {
@@ -68,5 +101,15 @@ label.swift {
 
 div.accountEditForm > button {
   margin-top: 12px;
+  margin-left: 12px;
   float: right;
+}
+
+button {
+  border: 1px solid black;
+  background-color: #CFE2F3;
+}
+
+button.cancel {
+  left: 0;
 }

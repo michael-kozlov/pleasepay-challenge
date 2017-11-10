@@ -6,7 +6,7 @@ import {inject, observer} from 'mobx-react';
 class ErrorDialog extends React.Component {
   render() {
     return (
-      <div>
+      <div className="errorDialog">
         <header>Error occured</header>
         Error message:<br/>
         {this.props.store.errorMessage}

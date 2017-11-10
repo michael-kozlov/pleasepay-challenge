@@ -3,6 +3,7 @@ import {observable, computed} from 'mobx';
 import {inject, observer} from "mobx-react";
 
 const NUMERIC_STRING = /^\d*$/;
+const ENTER_KEY = 13;
 
 /**
  * User bank account edit form component.
@@ -12,6 +13,15 @@ const NUMERIC_STRING = /^\d*$/;
 @inject('store')
 @observer
 class BankAccountEditForm extends React.Component {
+  // Data fields for store refs to form elements
+  nameInput;
+  accountInput;
+  ibanInput;
+  sortCode1Input;
+  sortCode2Input;
+  sortCode3Input;
+  swiftInput;
+
   // Immutable field - observing not required
   accountId;
   userId;
@@ -56,13 +66,91 @@ class BankAccountEditForm extends React.Component {
     this.swift = account.swift;
   }
 
+  isNumericString(text) {
+    return text.match(NUMERIC_STRING);
+  }
+
   // Validation example
   handleAccountChange = (event) => {
     const account = event.target.value;
-    if (account.match(NUMERIC_STRING)) {
+    if (this.isNumericString(account)) {
       this.account = account;
     }
   };
+
+  isValidSortCode = (sortCode) => {
+    return this.isNumericString(sortCode) && sortCode.length <= 2;
+  }
+
+  focusToNext = (sortCode) => {
+    return sortCode.length == 2;
+  }
+
+  handleSortCode1Change = (event) => {
+    const sortCode = event.target.value;
+    if (this.isValidSortCode(sortCode)) {
+      this.sortCode1 = sortCode;
+
+      if (this.focusToNext(sortCode)) {
+        this.sortCode2Input.focus();
+      }
+    }
+  }
+
+  handleSortCode2Change = (event) => {
+    const sortCode = event.target.value;
+    if (this.isValidSortCode(sortCode)) {
+      this.sortCode2 = sortCode;
+
+      if (this.focusToNext(sortCode)) {
+        this.sortCode3Input.focus();
+      }
+    }
+  }
+
+  handleSortCode3Change = (event) => {
+    const sortCode = event.target.value;
+    if (this.isValidSortCode(sortCode)) {
+      this.sortCode3 = sortCode;
+
+      if (this.focusToNext(sortCode)) {
+        this.swiftInput.focus();
+      }
+    }
+  }
+
+  handleIbanChange = (event) => {
+    const iban = event.target.value.replace(/\ /g, '').toUpperCase();
+
+    if (!iban.match(/^[A-Z0-9]{0,34}$/)) {
+      return;
+    }
+
+    const ibanParts = iban.match(/.{1,4}/g);
+
+    if (ibanParts) {
+      this.iban = iban.match(/.{1,4}/g).join(' ');
+    }
+    else {
+      this.iban = '';
+    }
+  }
+
+  handleSwiftChange = (event) => {
+    const swift = event.target.value.toUpperCase();
+
+    if (!swift.match(/^[A-Z0-9]{0,11}$/)) {
+      return;
+    }
+
+    this.swift = swift;
+  }
+
+  cancel = () => {
+    const store = this.props.store;
+    store.view.setDisplay('bankdetails');
+    store.view.setEditAccountId(null);
+  }
 
   save = () => {
     const store = this.props.store;
@@ -80,7 +168,7 @@ class BankAccountEditForm extends React.Component {
     };
 
     store.pleasepayService.updateBankdetails(account).then((response) => {
-        store.view.setDisplay('bankdetails');
+      this.cancel();
     }).catch((error) => {
         store.setError(error);
     });
@@ -93,7 +181,10 @@ class BankAccountEditForm extends React.Component {
         <header>Account edit form</header>
         <label>Currency</label>
         <select value={this.currencyId}
-                onChange={(event) => {this.currencyId = event.target.value;}}>
+                onChange={(event) => {
+                  this.currencyId = event.target.value;
+                  this.nameInput.focus();
+                }}>
           {this.props.store.currencies.map((currency) => {
            return (<option key={currency._id} value={currency._id}>{currency.translations[this.props.store.translation]}</option>);
           })}
@@ -101,30 +192,43 @@ class BankAccountEditForm extends React.Component {
         <label>Name</label>
         <input type="text"
                value={this.name}
-               onChange={(event) => this.name = event.target.value}/>
+               ref={(element) => {this.nameInput = element;}}
+               onChange={(event) => this.name = event.target.value}
+               onKeyDown={(event) => {if (event.which === ENTER_KEY) {this.accountInput.focus()}}}/>
         <label>Account</label>
         <input type="text"
                value={this.account}
-               onChange={this.handleAccountChange}/>
+               ref={(element) => {this.accountInput = element;}}
+               onChange={this.handleAccountChange}
+               onKeyDown={(event) => {if (event.which === ENTER_KEY) {this.ibanInput.focus()}}}/>
         <label>IBAN</label>
         <input type="text"
                value={this.iban}
-               onChange={(event) => this.iban = event.target.value}/>
+               ref={(element) => {this.ibanInput = element;}}
+               onChange={this.handleIbanChange}
+               onKeyDown={(event) => {if (event.which === ENTER_KEY) {this.sortCode1Input.focus()}}}/>
         <label>Sort code</label>
         <input type="text"
                value={this.sortCode1}
-               onChange={(event) => this.sortCode1 = event.target.value} className="sortCode"/>
+               ref={(element) => {this.sortCode1Input = element;}}
+               onChange={this.handleSortCode1Change} className="sortCode"
+               onKeyDown={(event) => {if (event.which === ENTER_KEY) {this.sortCode2Input.focus()}}}/>
         <input type="text"
                value={this.sortCode2}
-               onChange={(event) => this.sortCode2 = event.target.value} className="sortCode"/>
+               ref={(element) => {this.sortCode2Input = element;}}
+               onChange={this.handleSortCode2Change} className="sortCode"
+               onKeyDown={(event) => {if (event.which === ENTER_KEY) {this.sortCode3Input.focus()}}}/>
         <input type="text"
                value={this.sortCode3}
-               onChange={(event) => this.sortCode3 = event.target.value} className="sortCode"/>
-        <br/>
+               ref={(element) => {this.sortCode3Input = element;}}
+               onChange={this.handleSortCode3Change} className="sortCode"
+               onKeyDown={(event) => {if (event.which === ENTER_KEY) {this.swiftInput.focus()}}}/>
         <label className="swift">SWIFT</label>
         <input type="text"
                value={this.swift}
-               onChange={(event) => this.swift = event.target.value}/>
+               ref={(element) => {this.swiftInput = element;}}
+               onChange={this.handleSwiftChange}/>
+        <button type="button" onClick={this.cancel}>Cancel</button>
         <button type="button" onClick={this.save}>Save</button>
       </div>
     );

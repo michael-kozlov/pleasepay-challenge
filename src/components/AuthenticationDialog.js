@@ -11,7 +11,7 @@ class AuthenticationDialog extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="authenticationDialog">
         <label>Enter your pleasepay token:</label><br/>
         <input type="text"
                size="64"
