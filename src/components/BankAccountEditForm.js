@@ -141,6 +141,10 @@ class BankAccountEditForm extends React.Component {
     else {
       this.iban = '';
     }
+
+    if (iban.length == 34) {
+      this.sortCode1Input.focus();
+    }
   }
 
   handleSwiftChange = (event) => {
