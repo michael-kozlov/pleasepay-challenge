@@ -1,0 +1,72 @@
+body {
+  margin: 0px;
+  background-color: #F3F3F3;
+  color: black;
+  font-family: Arial;
+}
+
+#main {
+  margin: 24px auto 0px auto;
+  width: 960px;
+}
+
+header {
+  margin-bottom: 12px;
+  font-size: 24px;
+}
+
+table.bankdetails {
+  width: 100%;
+  border-collapse: collapse;
+  border-bottom: 1px solid grey;
+}
+
+table.bankdetails tr {
+  border-top: 1px solid grey;
+  height: 32px;
+}
+
+table.bankdetails th {
+  font-weight: bold;
+}
+
+div.accountEditForm {
+  width: 480px;
+}
+
+div.accountEditForm > label {
+  display: block;
+  margin-top: 12px;
+  width: 120px;
+  float: left;
+}
+
+div.accountEditForm > select {
+  display: block;
+  box-sizing: border-box;
+  margin-top: 12px;
+  width: 360px;
+  float: left;
+}
+
+div.accountEditForm > input {
+  display: block;
+  box-sizing: border-box;
+  margin-top: 12px;
+  width: 360px;
+  float: left;
+}
+
+div.accountEditForm > input.sortCode {
+  margin-right: 10px;
+  width: 30px;
+}
+
+label.swift {
+  clear: left;
+}
+
+div.accountEditForm > button {
+  margin-top: 12px;
+  float: right;
+}
